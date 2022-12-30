@@ -10,13 +10,10 @@ function(touca_find_catch2)
         GIT_REPOSITORY  https://github.com/catchorg/Catch2.git
         GIT_TAG         v2.13.7
     )
-    FetchContent_GetProperties(catch2)
-    if (NOT catch2_POPULATED)
-        FetchContent_Populate(catch2)
-        add_library(Catch2 INTERFACE)
-        add_library(Catch2::Catch2 ALIAS Catch2)
-        target_include_directories(Catch2 INTERFACE ${catch2_SOURCE_DIR}/single_include)
-    endif()
+
+    set(CATCH_INSTALL_DOCS OFF)
+
+    FetchContent_MakeAvailable(catch2)
 endfunction()
 
 function(touca_find_cxxopts)
@@ -25,13 +22,13 @@ function(touca_find_cxxopts)
         GIT_REPOSITORY  https://github.com/jarro2783/cxxopts
         GIT_TAG         v2.2.1
     )
-    FetchContent_GetProperties(cxxopts)
-    if (NOT cxxopts_POPULATED)
-        FetchContent_Populate(cxxopts)
-        add_library(cxxopts INTERFACE)
-        add_library(cxxopts::cxxopts ALIAS cxxopts)
-        target_include_directories(cxxopts INTERFACE ${cxxopts_SOURCE_DIR}/include)
-    endif()
+
+    set(CXXOPTS_ENABLE_INSTALL ON)
+    set(CXXOPTS_BUILD_EXAMPLES OFF)
+    set(CXXOPTS_BUILD_TESTS OFF)
+
+    FetchContent_MakeAvailable(cxxopts)
+    add_library(cxxopts::cxxopts ALIAS cxxopts)
 endfunction()
 
 function(touca_find_fmt)
@@ -40,14 +37,12 @@ function(touca_find_fmt)
         GIT_REPOSITORY  https://github.com/fmtlib/fmt.git
         GIT_TAG         8.0.1
     )
-    FetchContent_GetProperties(fmt)
-    if (NOT fmt_POPULATED)
-        FetchContent_Populate(fmt)
-        add_library(fmt INTERFACE)
-        add_library(fmt::fmt ALIAS fmt)
-        target_compile_definitions(fmt INTERFACE FMT_HEADER_ONLY=1)
-        target_include_directories(fmt INTERFACE ${fmt_SOURCE_DIR}/include)
-    endif()
+
+    set(FMT_INSTALL ON)
+    set(FMT_DOC OFF)
+    set(FMT_TEST OFF)
+
+    FetchContent_MakeAvailable(fmt)
 endfunction()
 
 function(touca_find_ghcfilesystem)
@@ -56,13 +51,13 @@ function(touca_find_ghcfilesystem)
         GIT_REPOSITORY  https://github.com/gulrak/filesystem.git
         GIT_TAG         v1.5.10
     )
-    FetchContent_GetProperties(ghcFilesystem)
-    if (NOT ghcfilesystem_POPULATED)
-        FetchContent_Populate(ghcFilesystem)
-        add_library(ghcFilesystem INTERFACE)
-        add_library(ghcFilesystem::ghcFilesystem ALIAS ghcFilesystem)
-        target_include_directories(ghcFilesystem INTERFACE ${ghcfilesystem_SOURCE_DIR}/include)
-    endif()
+
+    set(GHC_FILESYSTEM_WITH_INSTALL ON)
+    set(GHC_FILESYSTEM_BUILD_TESTING OFF)
+    set(GHC_FILESYSTEM_BUILD_EXAMPLES OFF)
+
+    FetchContent_MakeAvailable(ghcFilesystem)
+    add_library(ghcFilesystem::ghcFilesystem ALIAS ghc_filesystem)
 endfunction()
 
 function(touca_find_flatbuffers)
@@ -71,13 +66,12 @@ function(touca_find_flatbuffers)
         GIT_REPOSITORY  https://github.com/google/flatbuffers.git
         GIT_TAG         v2.0.0
     )
-    FetchContent_GetProperties(flatbuffers)
-    if (NOT flatbuffers_POPULATED)
-        FetchContent_Populate(flatbuffers)
-        add_library(flatbuffers INTERFACE)
-        add_library(flatbuffers::flatbuffers ALIAS flatbuffers)
-        target_include_directories(flatbuffers INTERFACE ${flatbuffers_SOURCE_DIR}/include)
-    endif()
+
+    set(FLATBUFFERS_BUILD_INSTALL ON)
+    set(FLATBUFFERS_BUILD_TESTS OFF)
+
+    FetchContent_MakeAvailable(flatbuffers)
+    add_library(flatbuffers::flatbuffers ALIAS flatbuffers)
 endfunction()
 
 function(touca_find_httplib)
@@ -86,13 +80,8 @@ function(touca_find_httplib)
         GIT_REPOSITORY  https://github.com/yhirose/cpp-httplib.git
         GIT_TAG         v0.9.5
     )
-    FetchContent_GetProperties(httplib)
-    if (NOT httplib_POPULATED)
-        FetchContent_Populate(httplib)
-        add_library(httplib INTERFACE)
-        add_library(httplib::httplib ALIAS httplib)
-        target_include_directories(httplib INTERFACE ${httplib_SOURCE_DIR})
-    endif()
+
+    FetchContent_MakeAvailable(httplib)
 endfunction()
 
 function(touca_find_rapidjson)
@@ -101,13 +90,18 @@ function(touca_find_rapidjson)
         GIT_REPOSITORY  https://github.com/Tencent/rapidjson.git
         GIT_TAG         13dfc96c9c2b104be7b0b09a9f6e06871ed3e81d
     )
-    FetchContent_GetProperties(RapidJSON)
-    if (NOT rapidjson_POPULATED)
-        FetchContent_Populate(RapidJSON)
-        add_library(RapidJSON INTERFACE)
-        add_library(RapidJSON::RapidJSON ALIAS RapidJSON)
-        target_include_directories(RapidJSON INTERFACE ${rapidjson_SOURCE_DIR}/include)
-    endif()
+
+    set(RAPIDJSON_BUILD_DOC OFF)
+    set(RAPIDJSON_BUILD_EXAMPLES OFF)
+    set(RAPIDJSON_BUILD_TEST OFF)
+
+    FetchContent_MakeAvailable(rapidjson)
+
+    # TODO remove this after https://github.com/Tencent/rapidjson/pull/1901/files
+    #      or similar PR is merged and rapidjson library target is available.
+    #add_library(RapidJSON INTERFACE)
+    #add_library(RapidJSON::RapidJSON ALIAS RapidJSON)
+    #target_include_directories(RapidJSON INTERFACE ${rapidjson_SOURCE_DIR}/include)
 endfunction()
 
 function(touca_find_mpark_variant)
@@ -116,13 +110,9 @@ function(touca_find_mpark_variant)
         GIT_REPOSITORY  https://github.com/mpark/variant.git
         GIT_TAG         v1.4.0
     )
-    FetchContent_GetProperties(mpark_variant)
-    if (NOT mpark_variant_POPULATED)
-        FetchContent_Populate(mpark_variant)
-        add_library(mpark_variant INTERFACE)
-        add_library(mpark_variant::mpark_variant ALIAS mpark_variant)
-        target_include_directories(mpark_variant INTERFACE ${mpark_variant_SOURCE_DIR}/include)
-    endif()
+
+    FetchContent_MakeAvailable(mpark_variant)
+    add_library(mpark_variant::mpark_variant ALIAS mpark_variant)
 endfunction()
 
 function(touca_find_package)
